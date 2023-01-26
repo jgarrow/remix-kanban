@@ -604,6 +604,10 @@ video {
   max-width: 480px;
 }
 
+.flex-shrink-0 {
+  flex-shrink: 0;
+}
+
 .cursor-pointer {
   cursor: pointer;
 }

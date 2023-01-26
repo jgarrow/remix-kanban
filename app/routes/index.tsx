@@ -1,5 +1,5 @@
 import { ActionArgs, json, redirect } from "@remix-run/node";
-import { Form, useActionData } from "@remix-run/react";
+import { Form, useActionData, useNavigation } from "@remix-run/react";
 import invariant from "tiny-invariant";
 import { Octokit } from "octokit";
 import { Logo } from "~/components/Logo";
@@ -46,19 +46,17 @@ export async function action({ request }: ActionArgs) {
 }
 
 export default function Index() {
+  const navigation = useNavigation();
   const data = useActionData<typeof action>();
 
   return (
-    <main className="flex justify-between items-start px-[150px] pt-[273px] text-shade-1 dark:text-dark-shade-1">
+    <main className="flex justify-between items-start flex-shrink-0 px-[150px] pt-[273px] text-shade-1 dark:text-dark-shade-1">
       <Logo />
       <div className="w-[754px]">
         <h1 className="text-5xl text-left font-semibold tracking-tighter max-w-[480px]">
           Start by pasting the repository URL.
         </h1>
-        <Form
-          method="post"
-          className="w-full mt-[100px]"
-        >
+        <Form method="post" className="w-full mt-[100px]">
           <div className="flex gap-[10px] w-full">
             <label htmlFor="repo" className="sr-only">
               GitHub repository url
@@ -75,8 +73,9 @@ export default function Index() {
               type="submit"
               className="py-2 px-4 rounded-[4px] self-end dark:bg-dark-shade-4 dark:text-dark-shade-1 bg-shade-4 text-shade-1 tracking-[-0.0125em] leading-[1.4]"
             >
-              {/* if the form hasn't been submitted yet, data is undefined */}
-              {data === undefined || data.errors ? "Submit" : "Loading..."}
+              {["submitting", "loading"].includes(navigation.state)
+                ? "Loading..."
+                : "Submit"}
             </button>
           </div>
           <div className="mt-[20px]">
